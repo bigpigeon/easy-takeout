@@ -1,0 +1,10 @@
+baseurl = "http://127.0.0.1:9000" # 服务器地址
+needlogin = true                  # 是否需要登录验证服务
+dbaddress = "127.0.0.1"           # 数据库地址 例子(splite3=>test.db mysql=>tcp(127.0.0.1:3306) postgres=>127.0.0.1:5432)
+dbtype = "postgres"               # 数据库类型 postgres|mysql|splite3
+[dbargs]                          # 数据库的额外参数(mysql和postgres必须)
+  user="mysql"                 # 数据库用户名(mysql和postgres必须)
+  dbname="postgres"               # 数据库表名(mysql和postgres必须)
+  password="mysecretpassword"     # 密码(mysql和postgres必须)
+  sslmode="disable"               # 是否加密传输数据 enable|disable(postgres必须)
+  charset="utf8"                  # 字符串类型(mysql必须)

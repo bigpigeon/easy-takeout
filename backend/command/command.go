@@ -14,10 +14,11 @@ import (
 )
 
 type Config struct {
-	BaseUrl   string `"baseurl"`
-	DbAddress string `"dbaddress"`
-	DbType    string `"dbtype"`
-	NeedLogin bool   `"needlogin"`
+	BaseUrl   string            `"baseurl"`
+	DbAddress string            `"dbaddress"`
+	DbType    string            `"dbtype"`
+	NeedLogin bool              `"needlogin"`
+	DbArgs    map[string]string `"dbargs"`
 }
 
 type Command struct {
@@ -65,10 +66,13 @@ func UsageGenerate() {
 func Execute() {
 	UsageGenerate()
 	var commandExec func(c *Config)
-	if len(os.Args) > 0 && strings.HasPrefix(os.Args[1], "-") == false {
-		if c, ok := AvaliableCommand[os.Args[1]]; ok {
+	if len(os.Args) > 1 && strings.HasPrefix(os.Args[1], "-") == false {
+		ac := os.Args[1]
+		os.Args = append([]string{os.Args[0]}, os.Args[2:]...)
+		if c, ok := AvaliableCommand[ac]; ok {
 			commandExec = c.Executer
 		}
+
 	}
 	if commandExec == nil {
 		commandExec = AvaliableCommand["server"].Executer
@@ -81,7 +85,7 @@ func Execute() {
 	var dbAddress string
 	flag.StringVar(&dbAddress, "dbaddress", "", "base server address")
 	var dbType string
-	flag.StringVar(&dbType, "dbtype", "", "select mysql/sqlite/postgresql")
+	flag.StringVar(&dbType, "dbtype", "", "select mysql/sqlite3/postgresql")
 	var needLogin bool
 	flag.BoolVar(&needLogin, "needlogin", false, "only need name to takeout when needlogin was false")
 	flag.Parse()
@@ -91,6 +95,7 @@ func Execute() {
 		f, err := ioutil.ReadFile(configFile)
 		if err == nil {
 			if strings.HasSuffix(configFile, ".toml") {
+
 				err = toml.Unmarshal(f, config)
 				if err != nil {
 					panic(err)

@@ -1,4 +1,0 @@
-baseurl = "http://127.0.0.1"
-needlogin = true
-dbaddress = "test"
-dbtype = "postgres"
