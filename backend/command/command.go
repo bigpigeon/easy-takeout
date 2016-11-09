@@ -14,11 +14,12 @@ import (
 )
 
 type Config struct {
-	BaseUrl   string            `"baseurl"`
-	DbAddress string            `"dbaddress"`
-	DbType    string            `"dbtype"`
-	NeedLogin bool              `"needlogin"`
-	DbArgs    map[string]string `"dbargs"`
+	BaseUrl      string            `"baseurl"`
+	DbAddress    string            `"dbaddress"`
+	DbType       string            `"dbtype"`
+	NeedLogin    bool              `"needlogin"`
+	DbArgs       map[string]string `"dbargs"`
+	CacheAddress string            `"cacheaddress"`
 }
 
 type Command struct {
@@ -83,9 +84,11 @@ func Execute() {
 	var baseUrl string
 	flag.StringVar(&baseUrl, "baseurl", "", "base server address")
 	var dbAddress string
-	flag.StringVar(&dbAddress, "dbaddress", "", "base server address")
+	flag.StringVar(&dbAddress, "dbaddress", "", "database server address")
 	var dbType string
 	flag.StringVar(&dbType, "dbtype", "", "select mysql/sqlite3/postgresql")
+	var cacheAddress string
+	flag.StringVar(&cacheAddress, "cacheaddress", "", "cache server address")
 	var needLogin bool
 	flag.BoolVar(&needLogin, "needlogin", false, "only need name to takeout when needlogin was false")
 	flag.Parse()

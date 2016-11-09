@@ -5,6 +5,7 @@ import (
 
 	"github.com/easy-takeout/easy-takeout/backend/api"
 
+	"github.com/easy-takeout/easy-takeout/backend/cachemanage"
 	"github.com/easy-takeout/easy-takeout/backend/definition"
 )
 
@@ -13,11 +14,12 @@ func server(c *Config) {
 	if err != nil {
 		panic(err)
 	}
+	cachemanage := cachemanage.Create(c.CacheAddress)
 	url, err := url.Parse(c.BaseUrl)
 	if err != nil {
 		panic(err)
 	}
-	route := api.Create(db, c.NeedLogin)
+	route := api.Create(db, cachemanage, c.NeedLogin)
 	route.Run(url.Host)
 }
 

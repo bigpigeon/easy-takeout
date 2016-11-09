@@ -3,5 +3,6 @@
 config.toml
 config.json
 config.yaml
+public/*
 
 

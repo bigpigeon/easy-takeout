@@ -1,10 +1,29 @@
+# 通用配置
 baseurl = "http://127.0.0.1:9000" # 服务器地址
 needlogin = true                  # 是否需要登录验证服务
-dbaddress = "127.0.0.1"           # 数据库地址 (splite3=>test.db mysql=>tcp(127.0.0.1:3306) postgres=>127.0.0.1)
-dbtype = "postgres"               # 数据库类型 postgres|mysql|splite3
-[dbargs]                          # 数据库的额外参数 (mysql和postgres必须)
-  user="postgres"                 # 数据库用户名 (mysql和postgres必须)
-  dbname="postgres"               # 数据库表名 (mysql和postgres必须)
-  password="mysecretpassword"     # 密码 (mysql和postgres必须)
+cacheaddress = "127.0.0.1:6379"   # redis地址
+#
+# 数据库配置地址 三选一
+#
+
+# 使用sqlite数据库
+dbaddress = "test.db"             # sqlite的文件地址
+dbtype = "sqlite3"
+# 使用postgres数据库
+dbaddress = "127.0.0.1"           # ip地址
+dbtype = "postgres"               
+[dbargs]                          # 数据库的额外参数
+  user="postgres"                 # 数据库用户名 
+  dbname="postgres"               # 数据库表名 
+  password="mysecretpassword"     # 密码
   sslmode="disable"               # 是否加密传输数据 enable|disable (postgres必须)
-  charset="utf8"                  # 字符串类型 (mysql必须)
+
+# 使用mysql数据库
+dbaddress = "tcp(127.0.0.1:3306)" # 数据库地址 格式 tcp(ip:port)
+dbtype = "mysql"               
+[dbargs]                          # 数据库的额外参数 
+  user="root"                     # 数据库用户名 
+  dbname="mysql"                  # 数据库表名 
+  password="mysecretpassword"     # 密码 
+  charset="utf8"                  # 文件编码
+
