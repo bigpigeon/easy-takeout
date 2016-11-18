@@ -4,5 +4,6 @@ config.toml
 config.json
 config.yaml
 public/*
+backend/render/test/public/*
 
 

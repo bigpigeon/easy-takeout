@@ -20,6 +20,7 @@ type Config struct {
 	NeedLogin    bool              `"needlogin"`
 	DbArgs       map[string]string `"dbargs"`
 	CacheAddress string            `"cacheaddress"`
+	Custom       map[string]string `"custom"`
 }
 
 type Command struct {
@@ -33,7 +34,6 @@ var HelpDescription = `Usage of easy-takeout:
 Usage:
   easy-takeout [flags]
   easy-takeout [commands] [flags]
-
 `
 
 func PrintCommands() {
@@ -72,6 +72,8 @@ func Execute() {
 		os.Args = append([]string{os.Args[0]}, os.Args[2:]...)
 		if c, ok := AvaliableCommand[ac]; ok {
 			commandExec = c.Executer
+		} else {
+			fmt.Errorf(`Error: unknow command "%s"\n`, ac)
 		}
 
 	}

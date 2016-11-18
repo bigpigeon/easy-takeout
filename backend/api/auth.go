@@ -34,7 +34,7 @@ func (a *Api) Authorized(c *gin.Context) {
 func (a *Api) UnAuthorized(c *gin.Context) {
 	c.SetCookie("user_session", "", -1, "/", "", true, true)
 	c.SetCookie("user", "", -1, "/", "", true, true)
-	//	c.Redirect(http.StatusFound, "/")
+	c.Redirect(http.StatusFound, "/")
 }
 
 func (a *Api) SignIn(c *gin.Context) {
