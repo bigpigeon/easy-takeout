@@ -2,7 +2,10 @@ package render
 
 import (
 	"io"
+	"io/ioutil"
 	"os"
+	"path"
+	"strings"
 )
 
 func mkdirIfNotExist(dir string) error {
@@ -33,4 +36,68 @@ func copyFile(src, dst string) error {
 	}()
 	_, err = io.Copy(out, in)
 	return nil
+}
+
+func getAllFiles(root, curr string) ([]PathFile, error) {
+	absPath := path.Join(root, curr)
+	files, err := ioutil.ReadDir(absPath)
+	if err != nil {
+		return []PathFile{}, err
+	}
+	pathfiles := []PathFile{}
+	for _, f := range files {
+		if f.IsDir() {
+			subpathfiles, err := getAllFiles(root, path.Join(curr, f.Name()))
+			if err != nil {
+				return []PathFile{}, err
+			}
+
+			pathfiles = append(pathfiles, subpathfiles...)
+
+		} else {
+			// set path with relative position
+			pathfiles = append(pathfiles, PathFile{curr, f.Name()})
+		}
+
+	}
+	return pathfiles, nil
+}
+
+func _splitRenderFile(root, curr string, keepdir DirSorted) ([]PathFile, []PathFile, error) {
+	absPath := path.Join(root, curr)
+	files, err := ioutil.ReadDir(absPath)
+	if err != nil {
+		return []PathFile{}, []PathFile{}, err
+	}
+	renderFiles := []PathFile{}
+	keepFiles := []PathFile{}
+	for _, f := range files {
+		if keepdir.search(f.Name()) == true {
+			files, err := getAllFiles(root, path.Join(curr, f.Name()))
+			if err != nil {
+				return []PathFile{}, []PathFile{}, err
+			}
+			keepFiles = append(keepFiles, files...)
+		} else {
+			if f.IsDir() { // recusion director
+				subNotRending := DirSorted{}
+				for _, e := range keepdir {
+					if strings.HasPrefix(e, f.Name()) {
+						subNotRending = append(subNotRending, e[len(f.Name()):])
+					}
+				}
+				subRenderFiles, subKeepFiles, err := _splitRenderFile(root, path.Join(curr, f.Name()), subNotRending)
+				if err != nil {
+					return []PathFile{}, []PathFile{}, err
+				}
+				// add prefix path to sub html file
+				renderFiles = append(renderFiles, subRenderFiles...)
+				keepFiles = append(keepFiles, subKeepFiles...)
+			} else {
+				renderFiles = append(renderFiles, PathFile{curr, f.Name()})
+			}
+		}
+
+	}
+	return renderFiles, keepFiles, nil
 }

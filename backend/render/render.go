@@ -2,7 +2,6 @@ package render
 
 import (
 	"html/template"
-	"io/ioutil"
 	"os"
 	"path"
 	"sort"
@@ -45,70 +44,6 @@ func (e DirSorted) search(s string) bool {
 	return false
 }
 
-func getAllFiles(root, curr string) ([]PathFile, error) {
-	absPath := path.Join(root, curr)
-	files, err := ioutil.ReadDir(absPath)
-	if err != nil {
-		return []PathFile{}, err
-	}
-	pathfiles := []PathFile{}
-	for _, f := range files {
-		if f.IsDir() {
-			subpathfiles, err := getAllFiles(root, path.Join(curr, f.Name()))
-			if err != nil {
-				return []PathFile{}, err
-			}
-
-			pathfiles = append(pathfiles, subpathfiles...)
-
-		} else {
-			// set path with relative position
-			pathfiles = append(pathfiles, PathFile{curr, f.Name()})
-		}
-
-	}
-	return pathfiles, nil
-}
-
-func _splitRenderFile(root, curr string, keepdir DirSorted) ([]PathFile, []PathFile, error) {
-	absPath := path.Join(root, curr)
-	files, err := ioutil.ReadDir(absPath)
-	if err != nil {
-		return []PathFile{}, []PathFile{}, err
-	}
-	renderFiles := []PathFile{}
-	keepFiles := []PathFile{}
-	for _, f := range files {
-		if keepdir.search(f.Name()) == true {
-			files, err := getAllFiles(root, path.Join(curr, f.Name()))
-			if err != nil {
-				return []PathFile{}, []PathFile{}, err
-			}
-			keepFiles = append(keepFiles, files...)
-		} else {
-			if f.IsDir() { // recusion director
-				subNotRending := DirSorted{}
-				for _, e := range keepdir {
-					if strings.HasPrefix(e, f.Name()) {
-						subNotRending = append(subNotRending, e[len(f.Name()):])
-					}
-				}
-				subRenderFiles, subKeepFiles, err := _splitRenderFile(root, path.Join(curr, f.Name()), subNotRending)
-				if err != nil {
-					return []PathFile{}, []PathFile{}, err
-				}
-				// add prefix path to sub html file
-				renderFiles = append(renderFiles, subRenderFiles...)
-				keepFiles = append(keepFiles, subKeepFiles...)
-			} else {
-				renderFiles = append(renderFiles, PathFile{curr, f.Name()})
-			}
-		}
-
-	}
-	return renderFiles, keepFiles, nil
-}
-
 /*
 * split file with need rending and not
  */
@@ -116,6 +51,13 @@ func SplitRenderFile(root string, keepdir DirSorted) ([]PathFile, []PathFile, er
 	return _splitRenderFile(root, "", keepdir)
 }
 
+/*
+* Render render html file from source path to target path
+* use html/template lib to parse template to the specified data object
+* any have ".html" suffix file in source path will be load
+* any without "_" prefix and have ".html" suffix file in source path will be render to target path with same path name
+* all in keepdirs list path file/dir will be copy to target path
+ */
 func Render(source, target string, keepdirs []string, data interface{}) error {
 	pathfiles, keepfiles, err := SplitRenderFile(source, CreateExcludeSorted(keepdirs))
 	if err != nil {
