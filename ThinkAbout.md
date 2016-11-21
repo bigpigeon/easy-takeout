@@ -11,3 +11,5 @@
     config.yaml  # 主配置文件，前后端共用
     main.go      # 后端程序入口
     backend/     # 后端目录入口
+    template/    # 静态模板路经
+	public/      # 生成的静态html文件路经

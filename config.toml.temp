@@ -2,6 +2,8 @@
 baseurl = "http://127.0.0.1:9000" # 服务器地址
 needlogin = true                  # 是否需要登录验证服务
 cacheaddress = "127.0.0.1:6379"   # redis地址
+[custom]                          # 自定义数据
+
 #
 # 数据库配置地址 三选一
 #
