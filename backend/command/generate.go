@@ -13,7 +13,7 @@ func generate(c *Config) {
 
 func init() {
 	AvaliableCommand["generate"] = Command{
-		Description: "generate static template html",
+		Description: "generate static html with template",
 		Executer:    generate,
 	}
 }

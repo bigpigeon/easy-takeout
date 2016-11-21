@@ -1,24 +1,17 @@
 package command
 
 import (
-	"encoding/json"
-	"fmt"
-	"reflect"
+	"os"
+
+	"github.com/BurntSushi/toml"
 )
 
 func printConfig(c *Config) {
-	s := reflect.ValueOf(c).Elem()
-	typeOfT := s.Type()
-	NameValuePairs := map[string]interface{}{}
-	for i := 0; i < s.NumField(); i++ {
-		f := s.Field(i)
-		NameValuePairs[typeOfT.Field(i).Name] = f.Interface()
-	}
-	b, err := json.MarshalIndent(NameValuePairs, "", "  ")
+	encoder := toml.NewEncoder(os.Stdout)
+	err := encoder.Encode(c)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(b))
 }
 
 func init() {

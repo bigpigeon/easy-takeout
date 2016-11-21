@@ -14,13 +14,14 @@ import (
 )
 
 type Config struct {
-	BaseUrl      string            `"baseurl"`
-	DbAddress    string            `"dbaddress"`
-	DbType       string            `"dbtype"`
-	NeedLogin    bool              `"needlogin"`
-	DbArgs       map[string]string `"dbargs"`
-	CacheAddress string            `"cacheaddress"`
-	Custom       map[string]string `"custom"`
+	BaseUrl      string            `toml:"baseurl" json:"baseurl" yaml:"baseurl"`
+	DbAddress    string            `toml:"dbaddress" json:"dbaddress" yaml:"dbaddress"`
+	DbType       string            `toml:"dbtype" json:"dbtype" yaml:"dbtype"`
+	NeedLogin    bool              `toml:"needlogin" json:"needlogin" yaml:"needlogin"`
+	DbArgs       map[string]string `toml:"dbargs" json:"dbargs" yaml:"dbargs"`
+	CacheAddress string            `toml:"cacheaddress" json:"cacheaddress" yaml:"cacheaddress"`
+
+	Custom map[string]string `toml:"custom" json:"custom" yaml:"custom"`
 }
 
 type Command struct {
