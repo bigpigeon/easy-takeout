@@ -24,3 +24,8 @@ func Create(db *gorm.DB, cachemanage *cachemanage.Manage, needlogin bool) *gin.E
 	e.StaticFS("/", gin.Dir("./public", true))
 	return e
 }
+
+func (api *Api) Close() {
+	api.DB.Close()
+	api.Cache.Close()
+}

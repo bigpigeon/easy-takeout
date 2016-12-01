@@ -1,5 +1,6 @@
 *.o
 *.exe
+*.db
 config.toml
 config.json
 config.yaml

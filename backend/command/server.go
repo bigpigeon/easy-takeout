@@ -14,12 +14,21 @@ func server(c *Config) {
 	if err != nil {
 		panic(err)
 	}
-	cachemanage := cachemanage.Create(c.CacheAddress)
+	var cacheClient *cachemanage.Manage
+	if c.CacheAddress == "" {
+		cacheClient, err = cachemanage.Create(c.DbType, c.DbAddress, c.DbArgs)
+	} else {
+		cacheClient, err = cachemanage.Create("redis", c.CacheAddress, nil)
+	}
+	if err != nil {
+		panic(err)
+	}
+
 	url, err := url.Parse(c.BaseUrl)
 	if err != nil {
 		panic(err)
 	}
-	route := api.Create(db, cachemanage, c.NeedLogin)
+	route := api.Create(db, cacheClient, c.NeedLogin)
 	route.Run(url.Host)
 }
 

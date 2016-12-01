@@ -4,15 +4,11 @@ import (
 	"gopkg.in/redis.v5"
 )
 
-type Client struct {
-	redis.Client
-}
-
-func CreateClient(address string) *Client {
+func CreateRedisClient(address string, password string, db int) (*redis.Client, error) {
 	client := redis.NewClient(&redis.Options{
 		Addr:     address,
-		Password: "",
-		DB:       1,
+		Password: password,
+		DB:       db,
 	})
-	return &Client{*client}
+	return client, nil
 }

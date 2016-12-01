@@ -1,7 +1,7 @@
 # 通用配置
 baseurl = "http://127.0.0.1:9000" # 服务器地址
 needlogin = true                  # 是否需要登录验证服务
-cacheaddress = "127.0.0.1:6379"   # redis地址
+cacheaddress = "127.0.0.1:6379"   # redis地址 如果为空则使用数据库做缓存
 [custom]                          # 自定义数据
 
 #

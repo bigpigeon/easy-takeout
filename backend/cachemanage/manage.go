@@ -9,13 +9,36 @@ const (
 	loginSessionKey = "login"
 )
 
+/*
+* to hard to implement redis.Cmdable, so used  Client to replace
+ */
 type Manage struct {
-	client *Client
+	client Client
 }
 
-func Create(address string) *Manage {
-	client := CreateClient(address)
-	return &Manage{client}
+type Client interface {
+	HSet(key, field, value string) *redis.BoolCmd
+	HGet(key, field string) *redis.StringCmd
+	Close() error
+}
+
+func (m *Manage) Close() error {
+	return m.client.Close()
+}
+
+func Create(dbtype, address string, args map[string]interface{}) (*Manage, error) {
+	var client Client
+	var err error
+	switch dbtype {
+	case "redis":
+		client, err = CreateRedisClient(address, args["password"].(string), args["db"].(int))
+	default:
+		client, err = CreateGormClient(dbtype, address, args)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &Manage{client}, nil
 }
 
 func (m *Manage) GenerateLoginSession(name string) (string, error) {

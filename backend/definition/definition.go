@@ -11,16 +11,16 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-func Connect(dbtype, dbaddress string, args map[string]string) (*gorm.DB, error) {
+func Connect(dbtype, dbaddress string, args map[string]interface{}) (*gorm.DB, error) {
 	source := ""
 	switch dbtype {
 	case "mysql":
 		source = dbaddress
 		//combination user and password
 		if user, ok := args["user"]; ok {
-			preStr := user
+			preStr := user.(string)
 			if pass, ok := args["password"]; ok {
-				preStr += ":" + pass
+				preStr += ":" + pass.(string)
 				delete(args, "password")
 			}
 			source = fmt.Sprintf("%s@%s", preStr, dbaddress)
@@ -61,13 +61,24 @@ func Connect(dbtype, dbaddress string, args map[string]string) (*gorm.DB, error)
 type (
 	User struct {
 		gorm.Model
-		Name string `"name"`
-		Pass string `"password"`
+		Name string `gorm:"index"`
+		Pass string
+	}
+	CacheManageHash struct {
+		gorm.Model
+		Key    string                 `gorm:"type:varchar(100);unique_index"`
+		Fields []CacheManageHashField `gorm:"ForeignKey:HashId"`
+	}
+	CacheManageHashField struct {
+		ID     uint   `gorm:"primary_key"`
+		HashId uint   `gorm:"index:idx_hash_field"`
+		Field  string `gorm:"type:varchar(100);index:idx_hash_field"`
+		Value  string
 	}
 )
 
 func Migrate(db *gorm.DB) error {
-	db.CreateTable(&User{})
-	db.Model(&User{}).AddIndex("idx_user_name", "name")
+	db.CreateTable(&User{}, &CacheManageHash{}, &CacheManageHashField{})
+
 	return nil
 }
