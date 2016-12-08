@@ -5,8 +5,7 @@
 method: post
 
 
-Content-Type: application/x-www-form-urlencoded
-Content-Type: json
+Content-Type: application/x-www-form-urlencoded application/json
 
 **data**
 
@@ -20,8 +19,8 @@ Content-Type: json
 method: post
 
 
-Content-Type: application/x-www-form-urlencoded 
-Content-Type: json
+Content-Type: application/x-www-form-urlencoded application/json
+
 
 **data**
 
@@ -36,8 +35,7 @@ Content-Type: json
 method: post
 
 
-Content-Type: application/x-www-form-urlencoded
-Content-Type: json
+Content-Type: application/x-www-form-urlencoded application/json
 
 **data**
 

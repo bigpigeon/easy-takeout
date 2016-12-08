@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -57,28 +58,8 @@ func Connect(dbtype, dbaddress string, args map[string]interface{}) (*gorm.DB, e
 	return db, nil
 }
 
-//db struct
-type (
-	User struct {
-		gorm.Model
-		Name string `gorm:"index"`
-		Pass string
+func BetweenCreateTime(start, end time.Time) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("create_at BETWEEN ? AND ?", start, end)
 	}
-	CacheManageHash struct {
-		gorm.Model
-		Key    string                 `gorm:"type:varchar(100);unique_index"`
-		Fields []CacheManageHashField `gorm:"ForeignKey:HashId"`
-	}
-	CacheManageHashField struct {
-		ID     uint   `gorm:"primary_key"`
-		HashId uint   `gorm:"index:idx_hash_field"`
-		Field  string `gorm:"type:varchar(100);index:idx_hash_field"`
-		Value  string
-	}
-)
-
-func Migrate(db *gorm.DB) error {
-	db.CreateTable(&User{}, &CacheManageHash{}, &CacheManageHashField{})
-
-	return nil
 }

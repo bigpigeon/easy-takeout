@@ -16,7 +16,8 @@ func (a *Api) AuthRequired(c *gin.Context) {
 	}
 
 	if s == "" || s != session {
-		c.AbortWithStatus(http.StatusForbidden)
+		c.SetCookie("user_session", "", -1, "/", "", false, true)
+		c.SetCookie("user", "", -1, "/", "", false, true)
 	} else {
 		c.Set("authuser", name)
 	}
@@ -39,18 +40,18 @@ func (a *Api) UnAuthorized(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/")
 }
 
-type SignInData struct {
+type ReqDataSignIn struct {
 	Name string `json:"name" form:"name" binding:"required"`
 	Pass string `json:"password" form:"password" binding:"required"`
 }
 
-type SignUpData struct {
+type ReqDataSignUp struct {
 	Name        string `json:"name" form:"name" binding:"required"`
 	Pass        string `json:"password" form:"password" binding:"required"`
 	PassConfirm string `json:"password_confirmation" form:"password_confirmation" binding:"required"`
 }
 
-type RePassData struct {
+type ReqDataRePass struct {
 	Name           string `json:"name" form:"name" binding:"required"`
 	Pass           string `json:"password" form:"password" binding:"required"`
 	NewPass        string `json:"new_password" form:"new_password" binding:"required"`
@@ -58,7 +59,7 @@ type RePassData struct {
 }
 
 func (a *Api) SignIn(c *gin.Context) {
-	var data SignInData
+	var data ReqDataSignIn
 	if err := c.Bind(&data); err != nil {
 		c.String(http.StatusForbidden, err.Error())
 		c.Abort()
@@ -73,7 +74,7 @@ func (a *Api) SignIn(c *gin.Context) {
 }
 
 func (a *Api) SignUp(c *gin.Context) {
-	var data SignUpData
+	var data ReqDataSignUp
 	if err := c.Bind(&data); err != nil {
 		c.String(http.StatusForbidden, err.Error())
 		c.Abort()
@@ -96,7 +97,7 @@ func (a *Api) SignUp(c *gin.Context) {
  renew password
 */
 func (a *Api) RePass(c *gin.Context) {
-	var data RePassData
+	var data ReqDataRePass
 	if err := c.Bind(&data); err != nil {
 		c.String(http.StatusForbidden, err.Error())
 		c.Abort()
