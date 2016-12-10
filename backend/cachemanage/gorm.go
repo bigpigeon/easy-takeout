@@ -20,12 +20,12 @@ func CreateGormClient(dbtype, address string, args map[string]interface{}) (*Gor
 
 func (orm *GormClient) HGet(key, field string) *redis.StringCmd {
 	if key == "" || field == "" {
-		return redis.NewStringResult([]byte{}, redis.Nil)
+		return redis.NewStringResult("", redis.Nil)
 	}
 	var hashData definition.CacheManageHash
 	orm.db.Where(&definition.CacheManageHash{Key: key}).First(&hashData)
 	if hashData.ID == 0 {
-		return redis.NewStringResult([]byte{}, redis.Nil)
+		return redis.NewStringResult("", redis.Nil)
 	}
 	var fieldData definition.CacheManageHashField
 	orm.db.Where(&definition.CacheManageHashField{
@@ -33,9 +33,9 @@ func (orm *GormClient) HGet(key, field string) *redis.StringCmd {
 		HashId: hashData.ID,
 	}).First(&fieldData)
 	if fieldData.Field == "" {
-		return redis.NewStringResult([]byte{}, redis.Nil)
+		return redis.NewStringResult("", redis.Nil)
 	}
-	return redis.NewStringResult([]byte(fieldData.Value), nil)
+	return redis.NewStringResult(fieldData.Value, nil)
 }
 
 func (orm *GormClient) HSet(key, field, value string) *redis.BoolCmd {
