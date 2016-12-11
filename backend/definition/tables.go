@@ -65,7 +65,7 @@ type (
 
 	Shop struct {
 		gorm.Model
-		Address    string `gorm:"type:varchar(256);unique_index"`
+		Address    string `gorm:"type:varchar(1024);unique_index"`
 		BeginPrice int
 		BeginCost  int
 		Discounts  []Discount `gorm:"ForeignKey:ShopId`
@@ -73,9 +73,9 @@ type (
 	}
 
 	UserItemCell struct {
-		ID         uint `gorm:"primary_key"`
-		UserItemId uint `gorm:"index"`
-		Name       string
+		ID         uint   `gorm:"primary_key"`
+		UserItemId uint   `gorm:"index"`
+		Name       string `gorm:"type:varchar(256)"`
 		Num        int
 	}
 
