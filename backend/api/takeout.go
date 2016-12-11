@@ -44,8 +44,8 @@ func (a *Api) Takeout(c *gin.Context) {
 		c.String(http.StatusForbidden, err.Error())
 		c.Abort()
 	} else {
-		authuser, _ := c.Get("authuser")
-		if data.AuthUser != authuser.(string) {
+		authuser, exist := c.Get("authuser")
+		if exist == false || data.AuthUser != authuser.(string) {
 			c.String(http.StatusForbidden, "")
 		} else {
 
@@ -86,6 +86,7 @@ func init() {
 	RequestBind = append(RequestBind, func(a *Api, e *gin.Engine) {
 		group := e.Group("/")
 		group.POST("/takeout", a.Authorized, a.Takeout)
-		group.POST("/order_list", a.Authorized, a.OrderList)
+		group.POST("/order", a.Order)
+		group.POST("/order_list", a.OrderList)
 	})
 }
