@@ -31,7 +31,9 @@ func Create(dbtype, address string, args map[string]interface{}) (*Manage, error
 	var err error
 	switch dbtype {
 	case "redis":
-		client, err = CreateRedisClient(address, args["password"].(string), args["db"].(int))
+		password, _ := args["password"].(string)
+		db, _ := args["db"].(int)
+		client, err = CreateRedisClient(address, password, db)
 	default:
 		client, err = CreateGormClient(dbtype, address, args)
 	}
