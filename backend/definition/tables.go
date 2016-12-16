@@ -52,9 +52,11 @@ func NestedSelect(table interface{}, selects []string) func(db *gorm.DB) *gorm.D
 //db struct
 type (
 	User struct {
-		gorm.Model
-		Name string `gorm:"unique_index"`
-		Pass string
+		CreatedAt time.Time
+		UpdatedAt time.Time
+		DeletedAt *time.Time `sql:"index"`
+		Name      string     `gorm:"type:varchar(256);primary_key"`
+		Pass      string
 	}
 
 	Discount struct {
@@ -64,37 +66,44 @@ type (
 	}
 
 	Shop struct {
-		gorm.Model
-		Address    string `gorm:"type:varchar(1024);unique_index"`
+		CreatedAt time.Time
+		UpdatedAt time.Time
+		DeletedAt *time.Time `sql:"index"`
+
+		Address    string `gorm:"type:varchar(1024);primary_key"`
 		BeginPrice int
 		BeginCost  int
 		Discounts  []Discount `gorm:"ForeignKey:ShopId`
-		Orders     []Order    `gorm:"ForeignKey:ShopId"`
 	}
 
 	UserItemCell struct {
 		ID         uint   `gorm:"primary_key"`
-		UserItemId uint   `gorm:"index"`
-		Name       string `gorm:"type:varchar(256)"`
-		Num        int
+		UserItemId uint   `gorm:"unique_index:idx_item_name"`
+		Name       string `gorm:"type:varchar(256);unique_index:idx_item_name"`
+		Num        uint
 	}
 
 	UserItem struct {
 		ID      uint           `gorm:"primary_key"`
-		OrderId uint           `gorm:"index"`
+		OrderId uint           `gorm:"unique_index:idx_order_user;index"`
 		Cell    []UserItemCell `gorm:"ForeignKey:UserItemId"`
-		User    User
-		UserId  uint
+
+		User     User   `gorm:"ForeignKey:UserName"`
+		UserName string `gorm:"type:varchar(256);unique_index:idx_order_user"`
 	}
 
 	Order struct {
 		gorm.Model
-		ShopId uint       `gorm:"index"`
-		Tag    string     `gorm:"type:varchar(64);unique_index"`
-		Items  []UserItem `gorm:"ForeignKey:OrderId"`
-		User   User
-		UserId uint
-		EndAt  *time.Time
+		ShopAddr string `gorm:"type:varchar(1024);index"`
+		Shop     Shop   `gorm:"ForeignKey:ShopAddr"`
+
+		Tag   string     `gorm:"type:varchar(64);unique_index"`
+		Items []UserItem `gorm:"ForeignKey:OrderId"`
+
+		User     *User   `gorm:"ForeignKey:UserName"`
+		UserName *string `gorm:"type:varchar(256);`
+
+		EndAt *time.Time
 	}
 
 	CacheManageHash struct {
@@ -110,10 +119,22 @@ type (
 	}
 )
 
+func dropAndCreate(tables ...interface{}) func(*gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.DropTableIfExists(tables...).CreateTable(tables...)
+	}
+}
+
 func Migrate(db *gorm.DB) error {
-	db.CreateTable(
+	db.Scopes(dropAndCreate(
 		&User{}, &Discount{}, &Shop{}, &UserItemCell{}, &UserItem{}, &Order{},
 		&CacheManageHash{}, &CacheManageHashField{},
-	)
+	))
 	return nil
+}
+
+func (cell *UserItemCell) Incr(value int) func(*gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Model(cell).Update("num", gorm.Expr("num + ?", value))
+	}
 }

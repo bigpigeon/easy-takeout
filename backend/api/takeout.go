@@ -48,6 +48,42 @@ func (a *Api) Takeout(c *gin.Context) {
 		if exist == false || data.AuthUser != authuser.(string) {
 			c.String(http.StatusForbidden, "")
 		} else {
+			// update shop
+			var shop definition.Shop
+			a.DB.Where(&definition.Shop{
+				Address: data.Address,
+			}).First(&shop)
+			TimeCurr := time.Now()
+			if shop.Address == "" {
+				shop.Address = data.Address
+				a.DB.FirstOrCreate(&shop)
+				// TODO access address to get shop information
+			} else if shop.UpdatedAt.AddDate(0, 0, 1).Before(TimeCurr) {
+				// TODO access address to get shop information
+			}
+
+			// update order
+			order := definition.Order{
+				Tag:      data.Tag,
+				ShopAddr: data.Address,
+			}
+			a.DB.FirstOrCreate(&order)
+
+			// update user item
+			user_item := definition.UserItem{
+				UserName: data.AuthUser,
+				OrderId:  order.ID,
+			}
+			a.DB.FirstOrCreate(&user_item)
+
+			// update item cell
+			for _, item := range data.Items {
+				item_cell := definition.UserItemCell{
+					UserItemId: user_item.ID,
+					Name:       item.Name,
+				}
+				a.DB.FirstOrCreate(&item_cell).Scopes(item_cell.Incr(item.Num))
+			}
 
 		}
 	}

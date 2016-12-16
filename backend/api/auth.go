@@ -66,7 +66,7 @@ func (a *Api) SignIn(c *gin.Context) {
 	} else {
 		var user definition.User
 		a.DB.Where(&definition.User{Name: data.Name, Pass: data.Pass}).First(&user)
-		if user.ID == 0 {
+		if user.Name == "" {
 			c.String(http.StatusUnauthorized, "name or password error")
 			c.Abort()
 		}
@@ -83,7 +83,7 @@ func (a *Api) SignUp(c *gin.Context) {
 		if data.Pass != data.PassConfirm {
 			c.String(http.StatusForbidden, "Password doesn't match the confirmation")
 			c.Abort()
-		} else if a.DB.Where(&definition.User{Name: data.Name}).First(&user); user.ID != 0 {
+		} else if a.DB.Where(&definition.User{Name: data.Name}).First(&user); user.Name != "" {
 			c.String(http.StatusForbidden, "Name is invalid or already taken")
 			c.Abort()
 		} else {
@@ -106,7 +106,7 @@ func (a *Api) RePass(c *gin.Context) {
 		if data.NewPass != data.NewPassConfirm {
 			c.JSON(http.StatusForbidden, gin.H{"message": "Password doesn't match the confirmation"})
 			c.Abort()
-		} else if a.DB.Where(&definition.User{Name: data.Name, Pass: data.Pass}).First(&user); user.ID == 0 {
+		} else if a.DB.Where(&definition.User{Name: data.Name, Pass: data.Pass}).First(&user); user.Name == "" {
 			c.JSON(http.StatusForbidden, gin.H{"message": "Old password isn't valid"})
 			c.Abort()
 		} else if data.NewPass == data.Pass {
