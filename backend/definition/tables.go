@@ -66,11 +66,9 @@ type (
 	}
 
 	Shop struct {
-		CreatedAt time.Time
-		UpdatedAt time.Time
-		DeletedAt *time.Time `sql:"index"`
+		gorm.Model
 
-		Address    string `gorm:"type:varchar(1024);primary_key"`
+		Address    string `gorm:"type:varchar(1024);unique_index"`
 		BeginPrice int
 		BeginCost  int
 		Discounts  []Discount `gorm:"ForeignKey:ShopId`
@@ -78,8 +76,9 @@ type (
 
 	UserItemCell struct {
 		ID         uint   `gorm:"primary_key"`
-		UserItemId uint   `gorm:"unique_index:idx_item_name"`
-		Name       string `gorm:"type:varchar(256);unique_index:idx_item_name"`
+		UserItemId uint   `gorm:"unique_index:idx_item_name_price"`
+		Name       string `gorm:"type:varchar(256);unique_index:idx_item_name_price"`
+		Price      uint   `gorm:"unique_index:idx_item_name_price"`
 		Num        uint
 	}
 
@@ -97,13 +96,13 @@ type (
 		ShopAddr string `gorm:"type:varchar(1024);index"`
 		Shop     Shop   `gorm:"ForeignKey:ShopAddr"`
 
-		Tag   string     `gorm:"type:varchar(64);unique_index"`
+		Tag   string     `gorm:"type:varchar(64);unique_index:idx_tag_endat"`
 		Items []UserItem `gorm:"ForeignKey:OrderId"`
 
 		User     *User   `gorm:"ForeignKey:UserName"`
 		UserName *string `gorm:"type:varchar(256);`
 
-		EndAt *time.Time
+		EndAt *time.Time `gorm:"unique_index:idx_tag_endat"`
 	}
 
 	CacheManageHash struct {

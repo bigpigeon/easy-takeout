@@ -60,6 +60,6 @@ func Connect(dbtype, dbaddress string, args map[string]interface{}) (*gorm.DB, e
 
 func BetweenCreateTime(start, end time.Time) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("create_at BETWEEN ? AND ?", start, end)
+		return db.Where("created_at BETWEEN ? AND ?", start, end)
 	}
 }

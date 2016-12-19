@@ -36,7 +36,7 @@ func promiseRespCodeRight(t *testing.T, w *httptest.ResponseRecorder, intervals 
 		}
 	}
 	t.Log(w.Code, w.Body.String())
-	t.FailNow()
+	t.Fail()
 }
 
 func reqSignUp(

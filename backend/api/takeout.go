@@ -2,7 +2,6 @@ package api
 
 import (
 	"net/http"
-
 	"time"
 
 	"github.com/easy-takeout/easy-takeout/backend/definition"
@@ -11,8 +10,9 @@ import (
 )
 
 type TakeOutItem struct {
-	Name string `json:"name"`
-	Num  int    `json:"num"`
+	Name  string `json:"name"`
+	Price uint   `json:"price"`
+	Num   int    `json:"num"`
 }
 
 type ReqDataTakeOut struct {
@@ -20,6 +20,10 @@ type ReqDataTakeOut struct {
 	Address  string        `json:"address" binding:"required"`
 	Tag      string        `json:"tag"`
 	Items    []TakeOutItem `json:"items"`
+}
+
+type RespDataTakeout struct {
+	OrderId uint `json:"order_id" binding:"required"`
 }
 
 type ReqDataOrder struct {
@@ -33,9 +37,9 @@ type ReqDataOrderList struct {
 
 type RespDataOrderList struct {
 	gorm.Model
-	ShopId uint
-	Tag    string
-	User   definition.User
+	ShopAddr string
+	Tag      string
+	User     *definition.User
 }
 
 func (a *Api) Takeout(c *gin.Context) {
@@ -67,24 +71,28 @@ func (a *Api) Takeout(c *gin.Context) {
 				Tag:      data.Tag,
 				ShopAddr: data.Address,
 			}
-			a.DB.FirstOrCreate(&order)
+			a.DB.FirstOrCreate(&order, &order)
 
 			// update user item
 			user_item := definition.UserItem{
 				UserName: data.AuthUser,
 				OrderId:  order.ID,
 			}
-			a.DB.FirstOrCreate(&user_item)
+			a.DB.FirstOrCreate(&user_item, &user_item)
 
 			// update item cell
 			for _, item := range data.Items {
+
 				item_cell := definition.UserItemCell{
 					UserItemId: user_item.ID,
 					Name:       item.Name,
+					Price:      item.Price,
 				}
-				a.DB.FirstOrCreate(&item_cell).Scopes(item_cell.Incr(item.Num))
+				a.DB.FirstOrCreate(&item_cell, &item_cell).Scopes(item_cell.Incr(item.Num))
 			}
-
+			c.JSON(http.StatusOK, &RespDataTakeout{
+				OrderId: order.ID,
+			})
 		}
 	}
 }
@@ -114,6 +122,7 @@ func (a *Api) OrderList(c *gin.Context) {
 			definition.BetweenCreateTime(data.Start, data.End),
 			definition.PreloadOrder.BelongsTo,
 		).Scan(&orders)
+		//		fmt.Println(data.Start, data.End)
 		c.JSON(200, orders)
 	}
 }
@@ -121,7 +130,7 @@ func (a *Api) OrderList(c *gin.Context) {
 func init() {
 	RequestBind = append(RequestBind, func(a *Api, e *gin.Engine) {
 		group := e.Group("/")
-		group.POST("/takeout", a.Authorized, a.Takeout)
+		group.POST("/takeout", a.AuthRequired, a.Takeout)
 		group.POST("/order", a.Order)
 		group.POST("/order_list", a.OrderList)
 	})

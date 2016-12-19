@@ -28,8 +28,8 @@ func TestNestFieldName(t *testing.T) {
 	order := Order{}
 	result := nestedFieldNames(&order)
 	assert.Equal(t, result, map[string][]string{
-		BelongsTo: []string{"User"},
-		HasMany:   []string{"Items"},
+		BelongsTo: []string{"Shop", "Items.User", "User"},
+		HasMany:   []string{"Shop.Discounts", "Items", "Items.Cell"},
 	})
 	data := TestData{}
 	result = nestedFieldNames(&data)
