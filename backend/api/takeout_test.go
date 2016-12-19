@@ -12,24 +12,8 @@ import (
 
 	"github.com/easy-takeout/easy-takeout/backend/cachemanage"
 	"github.com/easy-takeout/easy-takeout/backend/definition"
-	"github.com/stretchr/testify/assert"
 	"gopkg.in/gin-gonic/gin.v1"
 )
-
-func getJsonData(t *testing.T, v interface{}) string {
-	b, err := json.Marshal(v)
-	assert.Equal(t, err, nil)
-	return string(b)
-}
-
-func fmtJsonBytes(t *testing.T, bytes []byte) string {
-	var v interface{}
-	err := json.Unmarshal(bytes, &v)
-	assert.Equal(t, err, nil)
-	newb, err := json.MarshalIndent(&v, "", "  ")
-	assert.Equal(t, err, nil)
-	return string(newb)
-}
 
 func reqJson(
 	t *testing.T,

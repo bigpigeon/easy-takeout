@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 	"net/http/httptest"
-	"net/url"
+
 	"os"
 	"strings"
 	"testing"
@@ -12,32 +12,6 @@ import (
 	"github.com/easy-takeout/easy-takeout/backend/definition"
 	"gopkg.in/gin-gonic/gin.v1"
 )
-
-func getFormData(m map[string]string) string {
-	form := url.Values{}
-	for k, v := range m {
-		form.Add(k, v)
-	}
-	return form.Encode()
-}
-
-func checkFailErr(t *testing.T, e error) {
-	if e != nil {
-		t.Error(e)
-		t.FailNow()
-	}
-}
-
-func promiseRespCodeRight(t *testing.T, w *httptest.ResponseRecorder, intervals []int) {
-	code := w.Code / 100
-	for _, v := range intervals {
-		if code == v {
-			return
-		}
-	}
-	t.Log(w.Code, w.Body.String())
-	t.Fail()
-}
 
 func reqSignUp(
 	t *testing.T,
