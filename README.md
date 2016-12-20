@@ -18,7 +18,7 @@ easy-takeout的目的是让一个团队一些订餐变得更便利
 确保有可用的redis服务器
 
 
-根据[config.toml.temp](//github.com/easy-takeout/easy-takeout/blob/master/config.toml.temp)配置好config.toml
+根据[config.toml.temp](config.toml.temp)配置好config.toml
 
 
 执行
