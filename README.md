@@ -29,7 +29,7 @@ easy-takeout的目的是让一个团队一些订餐变得更便利
 
 
 
-更多关于easy-takeout的使用可以看[这里](//github.com/easy-takeout/easy-takeout/tree/master/backend/command)
+更多关于easy-takeout的使用可以看[这里](backend/command)
 
 
 
