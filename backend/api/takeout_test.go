@@ -110,12 +110,12 @@ func TestTakeoutNormal(t *testing.T) {
 	{
 		w := reqOrder(t, takeoutResp.OrderId, r)
 		promiseRespCodeRight(t, w, []int{2})
-		t.Log(fmtJsonBytes(t, w.Body.Bytes()))
+		//		t.Log(fmtJsonBytes(t, w.Body.Bytes()))
 	}
 	// get order list
 	{
 		w := reqOrderList(t, time.Now().AddDate(0, 0, -1), time.Now(), r)
 		promiseRespCodeRight(t, w, []int{2})
-		t.Log(fmtJsonBytes(t, w.Body.Bytes()))
+		//		t.Log(fmtJsonBytes(t, w.Body.Bytes()))
 	}
 }
