@@ -102,18 +102,21 @@ func reqRePass(
 }
 
 func TestAuthNormal(t *testing.T) {
+	os.Mkdir("test", 0755)
 	db, err := definition.Connect("sqlite3", "test/test.db", nil)
 	checkFailErr(t, err)
 
 	err = definition.Migrate(db)
 	checkFailErr(t, err)
-	defer func() {
-		db.Close()
-		os.Remove("test/test.db")
-	}()
 
 	cache, err := cachemanage.Create("sqlite3", "test/test.db", nil)
 	checkFailErr(t, err)
+
+	defer func() {
+		db.Close()
+		cache.Close()
+		os.Remove("test/test.db")
+	}()
 
 	r := Create(db, cache, true)
 	//sign up with diff password
@@ -131,15 +134,19 @@ func TestAuthNormal(t *testing.T) {
 }
 
 func TestAuthRePass(t *testing.T) {
+	os.Mkdir("test", 0755)
 	db, err := definition.Connect("sqlite3", "test/test.db", nil)
 	checkFailErr(t, err)
+
 	err = definition.Migrate(db)
 	checkFailErr(t, err)
 
 	cache, err := cachemanage.Create("sqlite3", "test/test.db", nil)
 	checkFailErr(t, err)
+
 	defer func() {
 		db.Close()
+		cache.Close()
 		os.Remove("test/test.db")
 	}()
 
