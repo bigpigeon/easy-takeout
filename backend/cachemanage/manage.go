@@ -17,7 +17,7 @@ type Manage struct {
 }
 
 type Client interface {
-	HSet(key, field, value string) *redis.BoolCmd
+	HSet(key, field string, value interface{}) *redis.BoolCmd
 	HGet(key, field string) *redis.StringCmd
 	Close() error
 }

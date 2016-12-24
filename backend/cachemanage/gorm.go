@@ -38,7 +38,7 @@ func (orm *GormClient) HGet(key, field string) *redis.StringCmd {
 	return redis.NewStringResult(fieldData.Value, nil)
 }
 
-func (orm *GormClient) HSet(key, field, value string) *redis.BoolCmd {
+func (orm *GormClient) HSet(key, field string, value interface{}) *redis.BoolCmd {
 	if key == "" || field == "" {
 		return redis.NewBoolResult(false, redis.Nil)
 	}
@@ -54,7 +54,7 @@ func (orm *GormClient) HSet(key, field, value string) *redis.BoolCmd {
 	if fieldData.ID == 0 {
 		result = false
 	}
-	fieldData.Value = value
+	fieldData.Value = value.(string)
 	orm.db.Save(&fieldData)
 	return redis.NewBoolResult(result, nil)
 }
