@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/easy-takeout/easy-takeout/backend/render"
+	"github.com/bigpigeon/easy-takeout/backend/render"
 )
 
 func generate(c *Config) {

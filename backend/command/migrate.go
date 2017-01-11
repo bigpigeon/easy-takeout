@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/easy-takeout/easy-takeout/backend/definition"
+	"github.com/bigpigeon/easy-takeout/backend/definition"
 )
 
 func migrate(c *Config) {

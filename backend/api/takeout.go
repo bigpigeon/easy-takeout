@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/easy-takeout/easy-takeout/backend/definition"
+	"github.com/bigpigeon/easy-takeout/backend/definition"
 	"github.com/jinzhu/gorm"
 	"gopkg.in/gin-gonic/gin.v1"
 )

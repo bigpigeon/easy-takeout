@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/easy-takeout/easy-takeout/backend/definition"
+	"github.com/bigpigeon/easy-takeout/backend/definition"
 	"gopkg.in/gin-gonic/gin.v1"
 )
 

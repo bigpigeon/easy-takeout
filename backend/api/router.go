@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/easy-takeout/easy-takeout/backend/cachemanage"
+	"github.com/bigpigeon/easy-takeout/backend/cachemanage"
 	"github.com/jinzhu/gorm"
 	"gopkg.in/gin-gonic/gin.v1"
 )

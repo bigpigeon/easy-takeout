@@ -3,10 +3,10 @@ package command
 import (
 	"net/url"
 
-	"github.com/easy-takeout/easy-takeout/backend/api"
+	"github.com/bigpigeon/easy-takeout/backend/api"
 
-	"github.com/easy-takeout/easy-takeout/backend/cachemanage"
-	"github.com/easy-takeout/easy-takeout/backend/definition"
+	"github.com/bigpigeon/easy-takeout/backend/cachemanage"
+	"github.com/bigpigeon/easy-takeout/backend/definition"
 )
 
 func server(c *Config) {

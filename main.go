@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/easy-takeout/easy-takeout/backend/command"
+	"github.com/bigpigeon/easy-takeout/backend/command"
 )
 
 func main() {
