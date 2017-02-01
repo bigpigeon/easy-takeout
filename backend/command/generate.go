@@ -5,7 +5,7 @@ import (
 )
 
 func generate(c *Config) {
-	err := render.Render("template", "public", []string{"static"}, c)
+	err := render.Render("template", "public", []string{"static/js", "static/css"}, c)
 	if err != nil {
 		panic(err)
 	}

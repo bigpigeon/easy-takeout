@@ -20,6 +20,7 @@ type Config struct {
 	NeedLogin    bool                   `toml:"needlogin" json:"needlogin" yaml:"needlogin"`
 	DbArgs       map[string]interface{} `toml:"dbargs" json:"dbargs" yaml:"dbargs"`
 	CacheAddress string                 `toml:"cacheaddress" json:"cacheaddress" yaml:"cacheaddress"`
+	Watch        bool                   `toml:"watch" json:"watch" yaml:"watch"`
 
 	Custom map[string]interface{} `toml:"custom" json:"custom" yaml:"custom"`
 }
@@ -94,6 +95,8 @@ func Execute() {
 	flag.StringVar(&cacheAddress, "cacheaddress", "", "cache server address")
 	var needLogin bool
 	flag.BoolVar(&needLogin, "needlogin", false, "only need name to takeout when needlogin was false")
+	var watch bool
+	flag.BoolVar(&watch, "watch", false, "watch filesystem for changes and recreate as needed")
 	flag.Parse()
 
 	config := &Config{}
@@ -134,6 +137,9 @@ func Execute() {
 	}
 	if needLogin == true {
 		config.NeedLogin = needLogin
+	}
+	if watch == true {
+		config.Watch = watch
 	}
 	commandExec(config)
 }

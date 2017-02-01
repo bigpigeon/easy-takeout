@@ -5,8 +5,13 @@ import (
 
 	"github.com/bigpigeon/easy-takeout/backend/api"
 
+	"log"
+
+	"time"
+
 	"github.com/bigpigeon/easy-takeout/backend/cachemanage"
 	"github.com/bigpigeon/easy-takeout/backend/definition"
+	"github.com/fsnotify/fsnotify"
 )
 
 func server(c *Config) {
@@ -20,6 +25,7 @@ func server(c *Config) {
 	} else {
 		cacheClient, err = cachemanage.Create("redis", c.CacheAddress, nil)
 	}
+
 	if err != nil {
 		panic(err)
 	}
@@ -27,6 +33,36 @@ func server(c *Config) {
 	url, err := url.Parse(c.BaseUrl)
 	if err != nil {
 		panic(err)
+	}
+	generate(c)
+	// run generate when template file modify
+	if c.Watch == true {
+		watcher, err := fsnotify.NewWatcher()
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer watcher.Close()
+		go func() {
+			needReload := false
+			t := time.NewTicker(100 * time.Millisecond)
+			defer t.Stop()
+			for {
+				select {
+				case <-watcher.Events:
+					needReload = true
+				case <-t.C:
+					if needReload == true {
+						log.Println("html reloading...")
+						generate(c)
+						needReload = false
+					}
+				case err := <-watcher.Errors:
+					log.Println("error:", err)
+					break
+				}
+			}
+		}()
+		watcher.Add("template")
 	}
 	route := api.Create(db, cacheClient, c.NeedLogin)
 	route.Run(url.Host)
