@@ -1,0 +1,51 @@
+html{
+	height:100%;
+}
+
+body {
+    height:100%;
+	margin: 0px;
+}
+
+#main-board {
+	padding: 80px 0 0 0;
+}
+#top-banner {
+	position: fixed;
+}
+
+#left-banner{
+	padding: 80px 0 0 0;
+    width: 400px;
+    height: 100%;
+    float:left;       
+    margin: 0px;
+	color: white;
+}
+
+.show-grid [class^=col-] {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #eee;
+    background-color: rgba(86,61,124,.15);
+    border: 1px solid #ddd;
+    border: 1px solid rgba(86,61,124,.2);
+}
+
+
+
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: @screen-sm-min) {
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: @screen-md-min) {
+	
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: @screen-lg-min) {
+}

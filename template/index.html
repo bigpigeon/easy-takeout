@@ -2,22 +2,50 @@
 <html>
 {{ template "head" . }}
 <body>
-<form action="/sign_in" method="post">
-    <p>
-	name:
-	<input name="name" type="text" value="">
-	</p>
-	<p>
-	password:
-	<input name="password" type="text" value="">
-	</p>
-	<p>
-	<input type="submit" value="sign in">
-	</p>
-</form></body>
-<form action="/sign_out" method="post">
-    <input type="submit" value="sign out">
-</form>
+
+<div id="top-banner" class="container-fluid">
+	<div class="row show-grid">
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	  <div class="col-md-1">.col-md-1</div>
+	</div>
+</div>
+<div id="left-banner" class="container">
+	<div class="row show-grid">
+	  <div class="col-md-8">.col-md-1</div>
+	  <div class="col-md-8">.col-md-1</div>
+	  <div class="col-md-8">.col-md-1</div>
+	  <div class="col-md-8">.col-md-1</div>
+	</div>
+</div>
+
+<div id="main-board">
+	<form action="/sign_in" method="post">
+	    <p>
+		name:
+		<input name="name" type="text" value="">
+		</p>
+		<p>
+		password:
+		<input name="password" type="text" value="">
+		</p>
+		<p>
+		<input type="submit" value="sign in">
+		</p>
+	</form></body>
+	<form action="/sign_out" method="post">
+	    <input type="submit" value="sign out">
+	</form>
+</div>
 </body>
 
 </html>

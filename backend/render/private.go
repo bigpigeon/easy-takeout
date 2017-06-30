@@ -81,9 +81,11 @@ func _splitRenderFile(root, curr string, keepdir DirSorted) ([]PathFile, []PathF
 		} else {
 			if f.IsDir() { // recusion director
 				subNotRending := DirSorted{}
+				subkeepdir := f.Name() + "/"
 				for _, e := range keepdir {
-					if strings.HasPrefix(e, f.Name()) {
-						subNotRending = append(subNotRending, e[len(f.Name()):])
+
+					if strings.HasPrefix(e, subkeepdir) && len(e) > len(subkeepdir) {
+						subNotRending = append(subNotRending, e[len(subkeepdir):])
 					}
 				}
 				subRenderFiles, subKeepFiles, err := _splitRenderFile(root, path.Join(curr, f.Name()), subNotRending)
@@ -97,7 +99,6 @@ func _splitRenderFile(root, curr string, keepdir DirSorted) ([]PathFile, []PathF
 				renderFiles = append(renderFiles, PathFile{curr, f.Name()})
 			}
 		}
-
 	}
 	return renderFiles, keepFiles, nil
 }

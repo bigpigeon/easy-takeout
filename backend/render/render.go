@@ -6,6 +6,8 @@ import (
 	"path"
 	"sort"
 	"strings"
+
+	"github.com/bigpigeon/easy-takeout/backend/logger"
 )
 
 type DirSorted []string
@@ -68,6 +70,7 @@ func Render(source, target string, keepdirs []string, data interface{}) error {
 	for _, f := range keepfiles {
 		fSource := path.Join(source, f.Path, f.File)
 		fTarget := path.Join(target, f.Path, f.File)
+		logger.Debug.Println(fSource, fTarget)
 		dir, _ := path.Split(fTarget)
 		err := mkdirIfNotExist(dir)
 		if err != nil {

@@ -69,6 +69,7 @@ func UsageGenerate() {
 func Execute() {
 	UsageGenerate()
 	var commandExec func(c *Config)
+	// get first command
 	if len(os.Args) > 1 && strings.HasPrefix(os.Args[1], "-") == false {
 		ac := os.Args[1]
 		os.Args = append([]string{os.Args[0]}, os.Args[2:]...)
@@ -77,7 +78,6 @@ func Execute() {
 		} else {
 			fmt.Errorf(`Error: unknow command "%s"\n`, ac)
 		}
-
 	}
 	if commandExec == nil {
 		commandExec = AvaliableCommand["server"].Executer
